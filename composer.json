@@ -6,5 +6,8 @@
             "email": "sn.sasaki@core-tech.jp"
         }
     ],
-    "require": {}
+    "require": {},
+    "scripts" : {
+        "dev" : "cd src && php -S localhost:8000"
+    }
 }
