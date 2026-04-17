@@ -1,14 +1,6 @@
 <?php
 // 初期化（空配列）
-$todos = [];
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $title = $_POST['title'] ?? '';
-    if ($title !== '') {
-        // 空文字じゃなかった場合の処理
-        $title = trim($_POST('title') ?? '');
-    }
-}
-
+// $todos = [];
 // タスク一覧取得
 $filePath = 'todos.json';
 if (file_exists($filePath)){
@@ -17,11 +9,29 @@ if (file_exists($filePath)){
 }
 
 // 中身を確認
-var_dump($todos);
+// var_dump($todos);
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // var_dump($_POST('title'));
 
+    $title = trim($_POST['title'] ?? '');
 
+    if ($title !== '') {
+        $newTodo = [
+            'id' => count($todos)+1,
+            'title' => $title,
+            'created_at' => date('c'),
+        ];
+        $todos []= $newTodo;
+    }
 
+    // 連想配列のデータをjson形式にエンコード
+    // $updatedJson = ;
+
+    // jsonファイルを作成・更新
+    file_put_contents($filePath, json_encode($todos, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+    
+}
 
 ?>
 
@@ -35,10 +45,22 @@ var_dump($todos);
 <body>
     <h1>Todoアプリ</h1>
 
-    <form method="POST" action="">
+    <form method="post" action="">
         <input type="text" name="title" placeholder="Todoを入力">
         <button type="submit">追加</button>
     </form>
+
+    <h2>一覧</h2>
+
+    <ul>
+        <?php foreach ($todos as $todo): ?>
+            <li>
+                <?php 
+                echo htmlspecialchars($todo['title'], ENT_QUOTES, 'UTF-8');
+                ?>
+            </li>
+        <?php endforeach; ?>
+    </ul>
 
 </body>
 </html>
