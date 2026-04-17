@@ -1,6 +1,7 @@
 <?php
 // 初期化（空配列）
-// $todos = [];
+$todos = [];
+
 // タスク一覧取得
 $filePath = 'todos.json';
 if (file_exists($filePath)){
@@ -8,11 +9,7 @@ if (file_exists($filePath)){
     $todos = json_decode($json, true) ?? []; // trueの場合連想配列を返す
 }
 
-// 中身を確認
-// var_dump($todos);
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // var_dump($_POST('title'));
 
     $title = trim($_POST['title'] ?? '');
 
@@ -24,9 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
         $todos []= $newTodo;
     }
-
-    // 連想配列のデータをjson形式にエンコード
-    // $updatedJson = ;
 
     // jsonファイルを作成・更新
     file_put_contents($filePath, json_encode($todos, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
