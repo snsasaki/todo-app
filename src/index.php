@@ -1,6 +1,26 @@
 <?php
 // 初期化（空配列）
-// $todos = [];
+$todos = [];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $title = $_POST['title'] ?? '';
+    if ($title !== '') {
+        // 空文字じゃなかった場合の処理
+        $title = trim($_POST('title') ?? '');
+    }
+}
+
+// タスク一覧取得
+$filePath = 'todos.json';
+if (file_exists($filePath)){
+    $json = file_get_contents('filePath');
+    $todos = json_decode($json, true); // trueの場合連想配列を返す
+}
+
+
+
+
+
+
 ?>
 
 <!DOCTYPE html>
