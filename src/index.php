@@ -12,10 +12,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // タスク一覧取得
 $filePath = 'todos.json';
 if (file_exists($filePath)){
-    $json = file_get_contents('filePath');
-    $todos = json_decode($json, true); // trueの場合連想配列を返す
+    $json = file_get_contents($filePath);
+    $todos = json_decode($json, true) ?? []; // trueの場合連想配列を返す
 }
 
+// 中身を確認
+var_dump($todos);
 
 
 
