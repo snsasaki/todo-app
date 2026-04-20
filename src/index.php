@@ -2,12 +2,27 @@
 // 初期化（空配列）
 $todos = [];
 
-// タスク一覧取得
 $filePath = 'todos.json';
-if (file_exists($filePath)){
+
+// todoの読み込み
+function loadTodos($filePath) {
+    if (!file_exists($filePath)){
+        return [];
+    }
+
     $json = file_get_contents($filePath);
-    $todos = json_decode($json, true) ?? []; // trueの場合連想配列を返す
+    return json_decode($json, true) ?? [];
 }
+
+$todos = loadTodos($filePath);
+    
+function saveTodos($filePath, $todos) {
+
+    // jsonファイルを作成・更新
+    file_put_contents($filePath, json_encode($todos, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+    
+}
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -20,11 +35,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'created_at' => date('c'),
         ];
         $todos []= $newTodo;
+
+        saveTodos($filePath, $todos);
     }
 
-    // jsonファイルを作成・更新
-    file_put_contents($filePath, json_encode($todos, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
-    
+}
+
+if (isset ($_GET['deleted_id'])) {
+    $deletedId = (int)$_GET['deleted_id']; //文字列を整数に変換している
+
+    foreach ($todos as $index => $todo) {
+        if ($todo['id'] == $deletedId){
+            unset($todos[$index]);
+            break;
+        }
+    }
+
+    $todos = array_values($todos);
+    saveTodos($filePath, $todos);
+
+    header('Location: index.php');
+    exit;
 }
 
 ?>
@@ -52,6 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php 
                 echo htmlspecialchars($todo['title'], ENT_QUOTES, 'UTF-8');
                 ?>
+                <a href="?deleted_id=<?php echo $todo['id']; ?>">削除</a>
             </li>
         <?php endforeach; ?>
     </ul>
