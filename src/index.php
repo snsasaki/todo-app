@@ -1,4 +1,9 @@
 <?php
+
+session_start();
+
+$_SESSION['todoInfo']['name'] = '山田'; 
+
 // 初期化（空配列）
 $todos = [];
 
@@ -58,6 +63,10 @@ if (isset ($_GET['deleted_id'])) {
     exit;
 }
 
+if (isset($_SESSION['todoInfo'])) {
+    $userName = $_SESSION['todoInfo']['name'];
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -68,7 +77,11 @@ if (isset ($_GET['deleted_id'])) {
     <title>Todoアプリ</title>
 </head>
 <body>
-    <h1>Todoアプリ</h1>
+    <h1>
+        <?php
+            echo $userName . 'さんの'; 
+         ?>Todo
+    </h1>
 
     <form method="post" action="">
         <input type="text" name="title" placeholder="Todoを入力">
